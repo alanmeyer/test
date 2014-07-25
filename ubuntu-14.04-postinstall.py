@@ -105,23 +105,23 @@ def syntax():
     """
     Print the script syntax
     """
-    print "Ubuntu 14.04 post installation script version %s" % _VERSION
+    print "Post installation script version %s" % _VERSION
     print ""
-    print "Syntax: ubuntu-14.04-postinstall.py [-c cfgfile] [-h] [-v]"
+    print "Syntax: python " + (__file__) + " [-c cfgfile] [-h] [-v]"
     print "  -c cfgfile: Use the cfgfile instead of the default one"
     print "  -h        : Print the syntax and exit"
     print "  -v        : Print the version and exit"
     print ""
     print "Examples:"
     print ""
-    print " # ubuntu-14.04-postinstall.py"
+    print " # " + (__file__)
     print " > Run the script with the default configuration file"
     print "   %s" % _CONF_FILE
     print ""
-    print " # ubuntu-14.04-postinstall.py -c ./myconf.cfg"
+    print " # " + (__file__) + " -c ./myconf.cfg"
     print " > Run the script with the ./myconf.cfg file"
     print ""
-    print " # ubuntu-14.04-postinstall.py -c http://mysite.com/myconf.cfg"
+    print " # " + (__file__) + " -c http://mysite.com/myconf.cfg"
     print " > Run the script with the http://mysite.com/myconf.cfg configuration file"
     print ""
 
