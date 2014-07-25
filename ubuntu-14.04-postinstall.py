@@ -114,14 +114,14 @@ def syntax():
     print ""
     print "Examples:"
     print ""
-    print " # " + (__file__)
+    print " # python " + (__file__)
     print " > Run the script with the default configuration file"
     print "   %s" % _CONF_FILE
     print ""
-    print " # " + (__file__) + " -c ./myconf.cfg"
+    print " # python " + (__file__) + " -c ./myconf.cfg"
     print " > Run the script with the ./myconf.cfg file"
     print ""
-    print " # " + (__file__) + " -c http://mysite.com/myconf.cfg"
+    print " # python " + (__file__) + " -c http://mysite.com/myconf.cfg"
     print " > Run the script with the http://mysite.com/myconf.cfg configuration file"
     print ""
 
