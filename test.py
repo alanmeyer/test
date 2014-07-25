@@ -25,7 +25,7 @@ import ConfigParser
 # Change these values based on your project location
 _GIT_USER       = "alanmeyer"
 _GIT_PROJECT    = "test"
-_GIT_FILE       = "ubuntu-14.04-postinstall"
+_GIT_FILE       = "test"
 _GIT_BRANCH     = "master"
 
 # Change these based on your server
