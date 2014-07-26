@@ -376,7 +376,7 @@ def main(argv):
     # Add an existing user to an existing group
     if (config.has_section("users groups")):
         for user_name, group_names in config.items("users groups"):
-            showexec ("users groups: "+user_name+, _USER_MOD_GROUP+" "+group_names+" "+user_name)
+            showexec ("users groups: "+user_name, _USER_MOD_GROUP+" "+group_names+" "+user_name)
 
     # Delete an existing group
     if (config.has_section("delete groups")):
