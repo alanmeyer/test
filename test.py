@@ -63,11 +63,13 @@ _APT_KEY        = "apt-key adv --keyserver keyserver.ubuntu.com --recv-keys"
 _USER_ADD       = "adduser --disabled-password --gecos ,,,"
 _GROUP_ADD      = "addgroup"
 _USER_MOD_GROUP = "usermod -a -G"
+_USER_DEL       = "deluser"
+_GROUP_DEL      = "delgroup"
 _WGET           = "wget"
+
 
 # Classes
 #-----------------------------------------------------------------------------
-
 
 class colors:
     RED = '\033[91m'
@@ -339,7 +341,7 @@ def main(argv):
         for user_op, user_name in config.items("users"):
             showexec ("Add User "+user_name, _USER_ADD+" "+user_name)
 
-    # Add an existing user to a group
+    # Add new groups
     if (config.has_section("groups")):
         for group_op, group_name in config.items("groups"):
             showexec ("Add Group "+group_name, _GROUP_ADD+" "+group_name)
@@ -347,7 +349,17 @@ def main(argv):
     # Add an existing user to an existing group
     if (config.has_section("users groups")):
         for user_name, group_names in config.items("users groups"):
-            showexec ("Add User: "+user_name+" to Group(s)", _USER_MOD_GROUP+" "+group_names+" "+user_name)
+            showexec ("Add User "+user_name+" to Group(s)", _USER_MOD_GROUP+" "+group_names+" "+user_name)
+
+    # Delete an existing user
+    if (config.has_section("delete users")):
+        for user_op, user_name in config.items("delete users"):
+            showexec ("Delete user "+user_op, _USER_DEL+" "+user_name)
+
+    # Delete an existing group
+    if (config.has_section("delete groups")):
+        for group_op, group_name in config.items("delete groups"):
+            showexec ("Delete group "+user_op, _GROUP_DEL+" "+group_name)
 
     # Config changes
     if (config.has_section("config")):
