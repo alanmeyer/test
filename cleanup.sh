@@ -15,3 +15,5 @@ rm -r /etc/skel/.*
 rm -r /media/images
 rm    /root/scripts/*
 rm -r /root/bin
+
+crontab -r
