@@ -43,8 +43,8 @@ _GIT_PREFIX     = "https://raw.github.com/"
 _SLASH          = "/"
 _GIT_SUFFIX     = _GIT_USER + _SLASH + _GIT_PROJECT + _SLASH + _GIT_BRANCH + _SLASH + _GIT_FILE + ".cfg"
 _LOG_FILE       = _GIT_FILE + ".log"
-_DPKG_LOG_BEF   = _GIT_FILE + "-before.log"
-_DPKG_LOG_AFT   = _GIT_FILE + "-after.log"
+_DPKG_LOG_BEF   = _GIT_FILE + "-packages-before.log"
+_DPKG_LOG_AFT   = _GIT_FILE + "-packages-after.log"
 _CONF_FILE      = _GIT_PREFIX + _GIT_SUFFIX
 _REPO_COMMON    = _GIT_PREFIX + _GIT_COM_USER + _SLASH + _GIT_COM_PROJ + _SLASH + _GIT_COM_BRANCH + _SLASH
 
