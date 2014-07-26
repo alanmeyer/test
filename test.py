@@ -314,13 +314,19 @@ def main(argv):
     
     # Download and install dotfiles: vimrc, prompt...
     if (config.has_section("dotfiles")):
-        # Create the bashrc.d subfolder
-        showexec ("Create the ~/.bashrc.d subfolder", "mkdir -p $HOME/.bashrc.d")
         if (config.has_option("dotfiles", "bashrc")):
             showexec ("Download bash main configuration file", _WGET+" -O $HOME/.bashrc "+_REPO_COMMON+config.get("dotfiles", "bashrc"))
+            showexec ("Update ownership", "chown $USERNAME:$USERNAME $HOME/.bashrc")
+            showexec ("Copy to skel", "cp -f $HOME/.bashrc /etc/skel")
         if (config.has_option("dotfiles", "bashrc_common")):
+            showexec ("Create the ~/.bashrc.d subfolder", "mkdir -p $HOME/.bashrc.d")
             showexec ("Download bash prompt configuration file", _WGET+" -O $HOME/.bashrc.d/bashrc_common "+_REPO_COMMON+config.get("dotfiles", "bashrc_common"))
-        showexec ("Install the bash configuration file", "chown -R $USERNAME:$USERNAME $HOME/.bashrc*")
+            showexec ("Update ownership", "chown $USERNAME:$USERNAME $HOME/.bashrc.d/.bashrc_common")
+            showexec ("Copy to skel", "cp -f -r $HOME/.bashrc.d /etc/skel")
+        # Create skel scripts and bin folders
+        showexec ("Create the /etc/skel/bin subfolder", "mkdir -p /etc/bin")
+        showexec ("Create the /etc/skel/scripts subfolder", "mkdir -p /etc/scripts")
+
         # Vim
         if (config.has_option("dotfiles", "vimrc")):
             showexec ("Donwload the Vim configuration file", _WGET+" -O $HOME/.vimrc "+_REPO_COMMON+config.get("dotfiles", "vimrc"))
@@ -330,11 +336,16 @@ def main(argv):
         if (config.has_option("dotfiles", "htoprc")):
             showexec ("Download the Htop configuration file", _WGET+" -O $HOME/.htoprc "+_REPO_COMMON+config.get("dotfiles", "htoprc"))
             showexec ("Install the Htop configuration file", "chown -R $USERNAME:$USERNAME $HOME/.htoprc")
-        
+
         # Pythonrc
         if (config.has_option("dotfiles", "pythonrc")):
             showexec ("Download the Pythonrc configuration file", _WGET+" -O $HOME/.pythonrc "+_REPO_COMMON+config.get("dotfiles", "pythonrc"))
             showexec ("Install the Pythonrc configuration file", "chown -R $USERNAME:$USERNAME $HOME/.pythonrc")
+
+    # Config changes
+    if (config.has_section("config")):
+        for action_name, action_cmd in config.items("config"):
+            showexec ("Execute config action "+action_name.lstrip("action_"), action_cmd)
 
     # Add new users
     if (config.has_section("users")):
@@ -351,20 +362,15 @@ def main(argv):
         for user_name, group_names in config.items("users groups"):
             showexec ("Add User "+user_name+" to Group(s)", _USER_MOD_GROUP+" "+group_names+" "+user_name)
 
-    # Delete an existing user
-    if (config.has_section("delete users")):
-        for user_op, user_name in config.items("delete users"):
-            showexec ("Delete user "+user_op, _USER_DEL+" "+user_name)
-
     # Delete an existing group
     if (config.has_section("delete groups")):
         for group_op, group_name in config.items("delete groups"):
             showexec ("Delete group "+user_op, _GROUP_DEL+" "+group_name)
 
-    # Config changes
-    if (config.has_section("config")):
-        for action_name, action_cmd in config.items("config"):
-            showexec ("Execute config action "+action_name.lstrip("action_"), action_cmd)
+    # Delete an existing user
+    if (config.has_section("delete users")):
+        for user_op, user_name in config.items("delete users"):
+            showexec ("Delete user "+user_op, _USER_DEL+" "+user_name)
 
     # Parse and exec post-actions
     for action_name, action_cmd in config.items("postactions"):
