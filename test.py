@@ -316,23 +316,23 @@ def main(argv):
         # Create the bashrc.d subfolder
         showexec ("Create the ~/.bashrc.d subfolder", "mkdir -p $HOME/.bashrc.d")
         if (config.has_option("dotfiles", "bashrc")):
-            showexec ("Download bash main configuration file", _WGET+" -O $HOME/.bashrc "+config.get("dotfiles", _GIT_COMMON+"bashrc"))
+            showexec ("Download bash main configuration file", _WGET+" -O $HOME/.bashrc "+_GIT_COMMON+config.get("dotfiles", "bashrc"))
         if (config.has_option("dotfiles", "bashrc_common")):
-            showexec ("Download bash prompt configuration file", _WGET+" -O $HOME/.bashrc.d/bashrc_common "+config.get("dotfiles", _GIT_COMMON+"bashrc_common"))
+            showexec ("Download bash prompt configuration file", _WGET+" -O $HOME/.bashrc.d/bashrc_common "+_GIT_COMMON+config.get("dotfiles", "bashrc_common"))
         showexec ("Install the bash configuration file", "chown -R $USERNAME:$USERNAME $HOME/.bashrc*")
         # Vim
         if (config.has_option("dotfiles", "vimrc")):
-            showexec ("Donwload the Vim configuration file", _WGET+" -O $HOME/.vimrc "+config.get("dotfiles", _GIT_COMMON+"vimrc"))
+            showexec ("Donwload the Vim configuration file", _WGET+" -O $HOME/.vimrc "+_GIT_COMMON+config.get("dotfiles", "vimrc"))
             showexec ("Install the Vim configuration file", "chown -R $USERNAME:$USERNAME $HOME/.vimrc")
 
         # Htop
         if (config.has_option("dotfiles", "htoprc")):
-            showexec ("Download the Htop configuration file", _WGET+" -O $HOME/.htoprc "+config.get("dotfiles", _GIT_COMMON+"htoprc"))
+            showexec ("Download the Htop configuration file", _WGET+" -O $HOME/.htoprc "+_GIT_COMMON+config.get("dotfiles", "htoprc"))
             showexec ("Install the Htop configuration file", "chown -R $USERNAME:$USERNAME $HOME/.htoprc")
         
         # Pythonrc
         if (config.has_option("dotfiles", "pythonrc")):
-            showexec ("Download the Pythonrc configuration file", _WGET+" -O $HOME/.pythonrc "+config.get("dotfiles", _GIT_COMMON+"pythonrc"))
+            showexec ("Download the Pythonrc configuration file", _WGET+" -O $HOME/.pythonrc "+_GIT_COMMON+config.get("dotfiles", "pythonrc"))
             showexec ("Install the Pythonrc configuration file", "chown -R $USERNAME:$USERNAME $HOME/.pythonrc")
 
     # Add new users
