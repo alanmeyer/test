@@ -361,6 +361,18 @@ def main(argv):
             showexec ("media: Add "+media_index, _WGET+" -O /media/images/"+name+" "+_REPO_COMMON+media_name)
         showexec ("media: Update image directory privlidges", "chmod -R +644 /media/images")
 
+    # Scripts
+    if (config.has_section("scripts")):
+        showexec ("scripts: Create the $HOME/scripts subfolder", "mkdir -p $HOME/scripts")
+        for script_index, script_name in config.items("scripts"):
+            if (script_index.startswith("script_")):
+                script_local="$HOME/scripts/"+script_name[len("scripts_"):]
+                showexec ("scripts: Get   "+script_index, _WGET+" -O "+script_local+" "+_REPO_COMMON+script_name+" && chmod +x "+script_local)
+            else:
+                if (script_index.startswith("script_initd_")):
+                    script_local="/etc/init.d/"+script_name[len("scripts_"):]
+                    showexec ("scripts: initd get   "+script_index, _WGET+" -O "+script_local+" "+_REPO_COMMON+script_name+" && chmod +x "+script_local+" && update-rc.d "+script_local+"defaults")
+
     # Config changes
     if (config.has_section("config")):
         for action_name, action_cmd in config.items("config"):
@@ -391,13 +403,6 @@ def main(argv):
     if (config.has_section("delete users")):
         for user_op, user_name in config.items("delete users"):
             showexec ("delete users: "+user_op, _USER_DEL+" "+user_name)
-
-    if (config.has_section("scripts")):
-        showexec ("scripts: Create the $HOME/scripts subfolder", "mkdir -p $HOME/scripts")
-        for script_index, script_name in config.items("scripts"):
-            script_local="$HOME/scripts/"+script_name[len("scripts_"):]
-            showexec ("scripts: Get   "+script_index, _WGET+" -O "+script_local+" "+_REPO_COMMON+script_name)
-            showexec ("scripts: chmod "+script_index, "chmod +x "+script_local)
 
     # Parse and exec post-actions
     for action_name, action_cmd in config.items("postactions"):
