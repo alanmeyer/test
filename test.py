@@ -358,8 +358,8 @@ def main(argv):
         showexec ("media: Create images directory", "mkdir -p /media/images")
         for media_index, media_name in config.items("media"):
             name=media_name[len("media_"):]
-            showexec ("media: Add "+media_index, _WGET+" -O /media/images/"+name+" "+_REPO_COMMON+media_name)
-        showexec ("media: Update image directory privlidges", "chmod -R +644 /media/images")
+            showexec ("media: add "+media_index, _WGET+" -O /media/images/"+name+" "+_REPO_COMMON+media_name)
+        showexec ("media: update image directory privlidges", "chmod -R +644 /media/images")
 
     # Scripts
     if (config.has_section("scripts")):
@@ -367,11 +367,11 @@ def main(argv):
         for script_index, script_name in config.items("scripts"):
             if (script_index.startswith("script_")):
                 script_local="$HOME/scripts/"+script_name[len("scripts_"):]
-                showexec ("scripts: Get   "+script_index, _WGET+" -O "+script_local+" "+_REPO_COMMON+script_name+" && chmod +x "+script_local)
+                showexec ("scripts: get "+script_index, _WGET+" -O "+script_local+" "+_REPO_COMMON+script_name+" && chmod +x "+script_local)
             else:
-                if (script_index.startswith("script_initd_")):
+                if (script_index.startswith("script-initd_")):
                     script_local="/etc/init.d/"+script_name[len("scripts_"):]
-                    showexec ("scripts: initd get   "+script_index, _WGET+" -O "+script_local+" "+_REPO_COMMON+script_name+" && chmod +x "+script_local+" && update-rc.d "+script_local+"defaults")
+                    showexec ("scripts: initd get "+script_index, _WGET+" -O "+script_local+" "+_REPO_COMMON+script_name+" && chmod +x "+script_local+" && update-rc.d "+script_local+"defaults")
 
     # Config changes
     if (config.has_section("config")):
