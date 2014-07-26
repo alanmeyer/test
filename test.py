@@ -373,6 +373,11 @@ def main(argv):
                     script_local="/etc/init.d/"+script_name[len("scripts_"):]
                     script=script_name[len("scripts_"):]
                     showexec ("scripts: initd get "+script_index, _WGET+" -O "+script_local+" "+_REPO_COMMON+script_name+" && chmod +x "+script_local+" && update-rc.d "+script+" defaults")
+                else:
+                    if (script_index.startswith("script-cron_")):
+                        #script_local="/etc/init.d/"+script_name[len("scripts_"):]
+                        script=script_name[len("scripts_"):]
+                        showexec ("scripts: cron get "+script_index, _WGET+" -O "+script+" "+_REPO_COMMON+script_name+" && crontab "+script+" && rm "+script)
 
     # Config changes
     if (config.has_section("config")):
