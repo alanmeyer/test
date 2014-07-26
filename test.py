@@ -321,49 +321,49 @@ def main(argv):
     # Download and install dotfiles: vimrc, prompt...
     if (config.has_section("dotfiles")):
         if (config.has_option("dotfiles", "bashrc")):
-            showexec ("dotfiles: Download bash main configuration file", _WGET+" -O $HOME/.bashrc "+_REPO_COMMON+config.get("dotfiles", "bashrc"))
-            showexec ("dotfiles: Update ownership", "chown $USERNAME:$USERNAME $HOME/.bashrc")
-            showexec ("dotfiles: Copy to skel", "cp -f $HOME/.bashrc /etc/skel")
+            showexec ("dotfiles: get bash main configuration file", _WGET+" -O $HOME/.bashrc "+_REPO_COMMON+config.get("dotfiles", "bashrc"))
+            showexec ("dotfiles: update ownership", "chown $USERNAME:$USERNAME $HOME/.bashrc")
+            showexec ("dotfiles: copy to skel", "cp -f $HOME/.bashrc /etc/skel")
         if (config.has_option("dotfiles", "bashrc_common")):
-            showexec ("dotfiles: Create the ~/.bashrc.d subfolder", "mkdir -p $HOME/.bashrc.d")
-            showexec ("dotfiles: Download bash prompt configuration file", _WGET+" -O $HOME/.bashrc.d/bashrc_common "+_REPO_COMMON+config.get("dotfiles", "bashrc_common"))
-            showexec ("dotfiles: Update ownership", "chown $USERNAME:$USERNAME $HOME/.bashrc.d/bashrc_common")
-            showexec ("dotfiles: Copy to skel", "cp -f -r $HOME/.bashrc.d /etc/skel")
+            showexec ("dotfiles: create the ~/.bashrc.d subfolder", "mkdir -p $HOME/.bashrc.d")
+            showexec ("dotfiles: get bash prompt configuration file", _WGET+" -O $HOME/.bashrc.d/bashrc_common "+_REPO_COMMON+config.get("dotfiles", "bashrc_common"))
+            showexec ("dotfiles: update ownership", "chown $USERNAME:$USERNAME $HOME/.bashrc.d/bashrc_common")
+            showexec ("dotfiles: copy to skel", "cp -f -r $HOME/.bashrc.d /etc/skel")
         # Create scripts and bin folders
-        showexec ("dotfiles: Create the $HOME/bin subfolder", "mkdir -p $HOME/bin")
-        showexec ("dotfiles: Create the $HOME/scripts subfolder", "mkdir -p $HOME/scripts")
-        showexec ("dotfiles: Create the /etc/skel/bin subfolder", "mkdir -p /etc/skel/bin")
-        showexec ("dotfiles: Create the /etc/skel/scripts subfolder", "mkdir -p /etc/skel/scripts")
+        showexec ("dotfiles: create the $HOME/bin subfolder", "mkdir -p $HOME/bin")
+        showexec ("dotfiles: create the $HOME/scripts subfolder", "mkdir -p $HOME/scripts")
+        showexec ("dotfiles: create the /etc/skel/bin subfolder", "mkdir -p /etc/skel/bin")
+        showexec ("dotfiles: create the /etc/skel/scripts subfolder", "mkdir -p /etc/skel/scripts")
 
         # Vim
         if (config.has_option("dotfiles", "vimrc")):
-            showexec ("dotfiles: Donwload the Vim configuration file", _WGET+" -O $HOME/.vimrc "+_REPO_COMMON+config.get("dotfiles", "vimrc"))
-            showexec ("dotfiles: Install the Vim configuration file", "chown -R $USERNAME:$USERNAME $HOME/.vimrc")
-            showexec ("dotfiles: Copy to skel", "cp -f $HOME/.vimrc /etc/skel")
+            showexec ("dotfiles: get the vim configuration file", _WGET+" -O $HOME/.vimrc "+_REPO_COMMON+config.get("dotfiles", "vimrc"))
+            showexec ("dotfiles: update ownership", "chown -R $USERNAME:$USERNAME $HOME/.vimrc")
+            showexec ("dotfiles: copy to skel", "cp -f $HOME/.vimrc /etc/skel")
 
         # Htop
         if (config.has_option("dotfiles", "htoprc")):
-            showexec ("dotfiles: Download the Htop configuration file", _WGET+" -O $HOME/.htoprc "+_REPO_COMMON+config.get("dotfiles", "htoprc"))
-            showexec ("dotfiles: Install the Htop configuration file", "chown -R $USERNAME:$USERNAME $HOME/.htoprc")
-            showexec ("dotfiles: Copy to skel", "cp -f $HOME/.htoprc /etc/skel")
+            showexec ("dotfiles: get the htop configuration file", _WGET+" -O $HOME/.htoprc "+_REPO_COMMON+config.get("dotfiles", "htoprc"))
+            showexec ("dotfiles: update ownership", "chown -R $USERNAME:$USERNAME $HOME/.htoprc")
+            showexec ("dotfiles: copy to skel", "cp -f $HOME/.htoprc /etc/skel")
 
         # Pythonrc
         if (config.has_option("dotfiles", "pythonrc")):
-            showexec ("dotfiles: Download the Pythonrc configuration file", _WGET+" -O $HOME/.pythonrc "+_REPO_COMMON+config.get("dotfiles", "pythonrc"))
-            showexec ("dotfiles: Install the Pythonrc configuration file", "chown -R $USERNAME:$USERNAME $HOME/.pythonrc")
-            showexec ("dotfiles: Copy to skel", "cp -f $HOME/.pythonrc /etc/skel")
+            showexec ("dotfiles: get the pythonrc configuration file", _WGET+" -O $HOME/.pythonrc "+_REPO_COMMON+config.get("dotfiles", "pythonrc"))
+            showexec ("dotfiles: update ownership", "chown -R $USERNAME:$USERNAME $HOME/.pythonrc")
+            showexec ("dotfiles: copy to skel", "cp -f $HOME/.pythonrc /etc/skel")
 
     # Media files
     if (config.has_section("media")):
-        showexec ("media: Create images directory", "mkdir -p /media/images")
+        showexec ("media: create images directory", "mkdir -p /media/images")
         for media_index, media_name in config.items("media"):
             name=media_name[len("media_"):]
-            showexec ("media: add "+media_index, _WGET+" -O /media/images/"+name+" "+_REPO_COMMON+media_name)
+            showexec ("media: get "+media_index, _WGET+" -O /media/images/"+name+" "+_REPO_COMMON+media_name)
         showexec ("media: update image directory privlidges", "chmod -R +644 /media/images")
 
     # Scripts
     if (config.has_section("scripts")):
-        showexec ("scripts: Create the $HOME/scripts subfolder", "mkdir -p $HOME/scripts")
+        showexec ("scripts: create the $HOME/scripts subfolder", "mkdir -p $HOME/scripts")
         for script_index, script_name in config.items("scripts"):
             if (script_index.startswith("script_")):
                 script_local="$HOME/scripts/"+script_name[len("scripts_"):]
