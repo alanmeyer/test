@@ -391,7 +391,7 @@ def main(argv):
     if (config.has_section("scripts")):
         showexec ("scripts: Create the $HOME/scripts subfolder", "mkdir -p $HOME/scripts")
         for script_index, script_name in config.items("scripts"):
-            showexec ("scripts: Add "+script_index, _WGET+" -O $HOST/scripts/"+script_name.lstrip("scripts_")+" "+_REPO_COMMON+script_name)
+            showexec ("scripts: Add "+script_index, _WGET+" -O $HOME/scripts/"+script_name.lstrip("scripts_")+" "+_REPO_COMMON+script_name)
         showexec ("scripts: chmod", "chmod +x $HOST/scripts/*.sh")
 
     # Parse and exec post-actions
