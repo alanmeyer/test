@@ -302,7 +302,7 @@ def main(argv):
 
     # Set the hostname & IP
     showexec ("hosts: save original hosts file","cp -n /etc/hosts /etc/hosts.orig")
-    showexec ("hosts: ip update", "sed -i 's,^\("+_IP+"\).*/,\\1 "+_FQDN+" "+_HOSTNAME+" localhost localhost.localdomain' > /etc/hosts")
+    showexec ("hosts: ip update", "sed -i 's,^\("+_IP+"\).*/,\\1 "+_FQDN+" "+_HOSTNAME+" localhost localhost.localdomain,g' /etc/hosts")
     showexec ("hosts: update hostname","echo \""+_FQDN+"\" | tee /etc/hostname")
     showexec ("hosts: hostname service restart","service hostname restart")
 
