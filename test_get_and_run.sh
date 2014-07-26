@@ -10,7 +10,7 @@ GIT_SCRIPT_PYT=$GIT_SCRIPT".py"
 GIT_SCRIPT_CFG=$GIT_SCRIPT".cfg"
 GIT_SCRIPT_LOG=$GIT_SCRIPT".log"
 
-rm -f $GIT_SCRIPT_GET $GIT_SCRIPT_PYT $GIT_SCRIPT_CFG $GIT_SCRIPT_LOG
+rm -f $GIT_SCRIPT_GET $GIT_SCRIPT_PYT $GIT_SCRIPT_CFG $GIT_SCRIPT_LOG cleanup.sh
 wget https://raw.github.com/$GIT_PROJ/$GIT_SCRIPT_GET
 wget https://raw.github.com/$GIT_PROJ/$GIT_SCRIPT_PYT
 wget https://raw.github.com/$GIT_PROJ/cleanup.sh
