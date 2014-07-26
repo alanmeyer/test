@@ -4,7 +4,6 @@
 #
 # Based on work from http://www.nicolargo.com
 # Distributed under the GPL version 3 license
-#
 
 """
 Post linux installation script
@@ -21,6 +20,8 @@ import ConfigParser
 
 # Global variables
 #-----------------------------------------------------------------------------
+_VERSION        = "0.10.AM"
+_DEBUG          = 1
 
 # Change these values based on your project location
 _GIT_USER       = "alanmeyer"
@@ -43,10 +44,7 @@ _SLASH          = "/"
 _GIT_SUFFIX     = _GIT_USER + _SLASH + _GIT_PROJECT + _SLASH + _GIT_BRANCH + _SLASH + _GIT_FILE + ".cfg"
 _LOG_FILE       = _GIT_FILE + ".log"
 _CONF_FILE      = _GIT_PREFIX + _GIT_SUFFIX
-_GIT_COMMON     = _GIT_PREFIX + _GIT_COM_USER + _SLASH + _GIT_COM_PROJ + _SLASH + _GIT_COM_BRANCH + _SLASH
-
-_VERSION        = "0.01.AM"
-_DEBUG          = 1
+_REPO_COMMON    = _GIT_PREFIX + _GIT_COM_USER + _SLASH + _GIT_COM_PROJ + _SLASH + _GIT_COM_BRANCH + _SLASH
 
 # System commands
 #-----------------------------------------------------------------------------
@@ -316,23 +314,23 @@ def main(argv):
         # Create the bashrc.d subfolder
         showexec ("Create the ~/.bashrc.d subfolder", "mkdir -p $HOME/.bashrc.d")
         if (config.has_option("dotfiles", "bashrc")):
-            showexec ("Download bash main configuration file", _WGET+" -O $HOME/.bashrc "+_GIT_COMMON+config.get("dotfiles", "bashrc"))
+            showexec ("Download bash main configuration file", _WGET+" -O $HOME/.bashrc "+_REPO_COMMON+config.get("dotfiles", "bashrc"))
         if (config.has_option("dotfiles", "bashrc_common")):
-            showexec ("Download bash prompt configuration file", _WGET+" -O $HOME/.bashrc.d/bashrc_common "+_GIT_COMMON+config.get("dotfiles", "bashrc_common"))
+            showexec ("Download bash prompt configuration file", _WGET+" -O $HOME/.bashrc.d/bashrc_common "+_REPO_COMMON+config.get("dotfiles", "bashrc_common"))
         showexec ("Install the bash configuration file", "chown -R $USERNAME:$USERNAME $HOME/.bashrc*")
         # Vim
         if (config.has_option("dotfiles", "vimrc")):
-            showexec ("Donwload the Vim configuration file", _WGET+" -O $HOME/.vimrc "+_GIT_COMMON+config.get("dotfiles", "vimrc"))
+            showexec ("Donwload the Vim configuration file", _WGET+" -O $HOME/.vimrc "+_REPO_COMMON+config.get("dotfiles", "vimrc"))
             showexec ("Install the Vim configuration file", "chown -R $USERNAME:$USERNAME $HOME/.vimrc")
 
         # Htop
         if (config.has_option("dotfiles", "htoprc")):
-            showexec ("Download the Htop configuration file", _WGET+" -O $HOME/.htoprc "+_GIT_COMMON+config.get("dotfiles", "htoprc"))
+            showexec ("Download the Htop configuration file", _WGET+" -O $HOME/.htoprc "+_REPO_COMMON+config.get("dotfiles", "htoprc"))
             showexec ("Install the Htop configuration file", "chown -R $USERNAME:$USERNAME $HOME/.htoprc")
         
         # Pythonrc
         if (config.has_option("dotfiles", "pythonrc")):
-            showexec ("Download the Pythonrc configuration file", _WGET+" -O $HOME/.pythonrc "+_GIT_COMMON+config.get("dotfiles", "pythonrc"))
+            showexec ("Download the Pythonrc configuration file", _WGET+" -O $HOME/.pythonrc "+_REPO_COMMON+config.get("dotfiles", "pythonrc"))
             showexec ("Install the Pythonrc configuration file", "chown -R $USERNAME:$USERNAME $HOME/.pythonrc")
 
     # Add new users
