@@ -303,7 +303,7 @@ def main(argv):
     # Set the hostname & IP
     showexec ("hosts: save original hosts file","cp -n /etc/hosts /etc/hosts.orig")
     showexec ("hosts: ip update", "sed -i 's,^\("+_IP+"\).*/,\\1 "+_FQDN+" "+_HOSTNAME+" localhost localhost.localdomain > /etc/hosts")
-    showexec ("hosts: update hostname","echo \""+_FQDN+\"" | tee /etc/hostname")
+    showexec ("hosts: update hostname","echo \""+_FQDN+"\" | tee /etc/hostname")
     showexec ("hosts: hostname service restart","service hostname restart")
 
     #action_webalizer_2      = sed -i 's,^\(LogFile\).*,\1 /var/log/apache2/access.log,g'    /etc/webalizer/webalizer.conf
