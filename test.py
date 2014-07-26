@@ -319,74 +319,80 @@ def main(argv):
     # Download and install dotfiles: vimrc, prompt...
     if (config.has_section("dotfiles")):
         if (config.has_option("dotfiles", "bashrc")):
-            showexec ("Download bash main configuration file", _WGET+" -O $HOME/.bashrc "+_REPO_COMMON+config.get("dotfiles", "bashrc"))
-            showexec ("Update ownership", "chown $USERNAME:$USERNAME $HOME/.bashrc")
-            showexec ("Copy to skel", "cp -f $HOME/.bashrc /etc/skel")
+            showexec ("dotfiles: Download bash main configuration file", _WGET+" -O $HOME/.bashrc "+_REPO_COMMON+config.get("dotfiles", "bashrc"))
+            showexec ("dotfiles: Update ownership", "chown $USERNAME:$USERNAME $HOME/.bashrc")
+            showexec ("dotfiles: Copy to skel", "cp -f $HOME/.bashrc /etc/skel")
         if (config.has_option("dotfiles", "bashrc_common")):
-            showexec ("Create the ~/.bashrc.d subfolder", "mkdir -p $HOME/.bashrc.d")
-            showexec ("Download bash prompt configuration file", _WGET+" -O $HOME/.bashrc.d/bashrc_common "+_REPO_COMMON+config.get("dotfiles", "bashrc_common"))
-            showexec ("Update ownership", "chown $USERNAME:$USERNAME $HOME/.bashrc.d/bashrc_common")
-            showexec ("Copy to skel", "cp -f -r $HOME/.bashrc.d /etc/skel")
+            showexec ("dotfiles: Create the ~/.bashrc.d subfolder", "mkdir -p $HOME/.bashrc.d")
+            showexec ("dotfiles: Download bash prompt configuration file", _WGET+" -O $HOME/.bashrc.d/bashrc_common "+_REPO_COMMON+config.get("dotfiles", "bashrc_common"))
+            showexec ("dotfiles: Update ownership", "chown $USERNAME:$USERNAME $HOME/.bashrc.d/bashrc_common")
+            showexec ("dotfiles: Copy to skel", "cp -f -r $HOME/.bashrc.d /etc/skel")
         # Create scripts and bin folders
-        showexec ("Create the $HOME/bin subfolder", "mkdir -p $HOME/bin")
-        showexec ("Create the $HOME/scripts subfolder", "mkdir -p $HOME/scripts")
-        showexec ("Create the /etc/skel/bin subfolder", "mkdir -p /etc/skel/bin")
-        showexec ("Create the /etc/skel/scripts subfolder", "mkdir -p /etc/skel/scripts")
+        showexec ("dotfiles: Create the $HOME/bin subfolder", "mkdir -p $HOME/bin")
+        showexec ("dotfiles: Create the $HOME/scripts subfolder", "mkdir -p $HOME/scripts")
+        showexec ("dotfiles: Create the /etc/skel/bin subfolder", "mkdir -p /etc/skel/bin")
+        showexec ("dotfiles: Create the /etc/skel/scripts subfolder", "mkdir -p /etc/skel/scripts")
 
         # Vim
         if (config.has_option("dotfiles", "vimrc")):
-            showexec ("Donwload the Vim configuration file", _WGET+" -O $HOME/.vimrc "+_REPO_COMMON+config.get("dotfiles", "vimrc"))
-            showexec ("Install the Vim configuration file", "chown -R $USERNAME:$USERNAME $HOME/.vimrc")
-            showexec ("Copy to skel", "cp -f $HOME/.vimrc /etc/skel")
+            showexec ("dotfiles: Donwload the Vim configuration file", _WGET+" -O $HOME/.vimrc "+_REPO_COMMON+config.get("dotfiles", "vimrc"))
+            showexec ("dotfiles: Install the Vim configuration file", "chown -R $USERNAME:$USERNAME $HOME/.vimrc")
+            showexec ("dotfiles: Copy to skel", "cp -f $HOME/.vimrc /etc/skel")
 
         # Htop
         if (config.has_option("dotfiles", "htoprc")):
-            showexec ("Download the Htop configuration file", _WGET+" -O $HOME/.htoprc "+_REPO_COMMON+config.get("dotfiles", "htoprc"))
-            showexec ("Install the Htop configuration file", "chown -R $USERNAME:$USERNAME $HOME/.htoprc")
-            showexec ("Copy to skel", "cp -f $HOME/.htoprc /etc/skel")
+            showexec ("dotfiles: Download the Htop configuration file", _WGET+" -O $HOME/.htoprc "+_REPO_COMMON+config.get("dotfiles", "htoprc"))
+            showexec ("dotfiles: Install the Htop configuration file", "chown -R $USERNAME:$USERNAME $HOME/.htoprc")
+            showexec ("dotfiles: Copy to skel", "cp -f $HOME/.htoprc /etc/skel")
 
         # Pythonrc
         if (config.has_option("dotfiles", "pythonrc")):
-            showexec ("Download the Pythonrc configuration file", _WGET+" -O $HOME/.pythonrc "+_REPO_COMMON+config.get("dotfiles", "pythonrc"))
-            showexec ("Install the Pythonrc configuration file", "chown -R $USERNAME:$USERNAME $HOME/.pythonrc")
-            showexec ("Copy to skel", "cp -f $HOME/.pythonrc /etc/skel")
+            showexec ("dotfiles: Download the Pythonrc configuration file", _WGET+" -O $HOME/.pythonrc "+_REPO_COMMON+config.get("dotfiles", "pythonrc"))
+            showexec ("dotfiles: Install the Pythonrc configuration file", "chown -R $USERNAME:$USERNAME $HOME/.pythonrc")
+            showexec ("dotfiles: Copy to skel", "cp -f $HOME/.pythonrc /etc/skel")
 
     # Media files
     if (config.has_section("media")):
-        showexec ("Media: Create images directory", "mkdir -p /media/images")
+        showexec ("media: Create images directory", "mkdir -p /media/images")
         for media_index, media_name in config.items("media"):
-            showexec ("Media: Add "+media_index, _WGET+" -O /media/images/"+media_name.lstrip("media_")+" "+_REPO_COMMON+media_name)
-        showexec ("Media: Update image directory privlidges", "chmod -R +644 /media/images")
+            showexec ("media: Add "+media_index, _WGET+" -O /media/images/"+media_name.lstrip("media_")+" "+_REPO_COMMON+media_name)
+        showexec ("media: Update image directory privlidges", "chmod -R +644 /media/images")
 
     # Config changes
     if (config.has_section("config")):
         for action_name, action_cmd in config.items("config"):
-            showexec ("Configure "+action_name.lstrip("config_"), action_cmd)
+            showexec ("config: "+action_name.lstrip("config_"), action_cmd)
 
     # Add new users
     if (config.has_section("users")):
         for user_op, user_name in config.items("users"):
-            showexec ("Add User "+user_name, _USER_ADD+" "+user_name)
+            showexec ("users: "+user_name, _USER_ADD+" "+user_name)
 
     # Add new groups
     if (config.has_section("groups")):
         for group_op, group_name in config.items("groups"):
-            showexec ("Add Group "+group_name, _GROUP_ADD+" "+group_name)
+            showexec ("groups: "+group_name, _GROUP_ADD+" "+group_name)
 
     # Add an existing user to an existing group
     if (config.has_section("users groups")):
         for user_name, group_names in config.items("users groups"):
-            showexec ("Add User "+user_name+" to Group(s)", _USER_MOD_GROUP+" "+group_names+" "+user_name)
+            showexec ("users groups: "+user_name+, _USER_MOD_GROUP+" "+group_names+" "+user_name)
 
     # Delete an existing group
     if (config.has_section("delete groups")):
         for group_op, group_name in config.items("delete groups"):
-            showexec ("Delete group "+user_op, _GROUP_DEL+" "+group_name)
+            showexec ("delete groups: "+user_op, _GROUP_DEL+" "+group_name)
 
     # Delete an existing user
     if (config.has_section("delete users")):
         for user_op, user_name in config.items("delete users"):
-            showexec ("Delete user "+user_op, _USER_DEL+" "+user_name)
+            showexec ("delete users: "+user_op, _USER_DEL+" "+user_name)
+
+    if (config.has_section("scripts")):
+        showexec ("scripts: Create the $HOME/scripts subfolder", "mkdir -p $HOME/scripts")
+        for script_index, script_name in config.items("scripts"):
+            showexec ("scripts: Add "+script_index, _WGET+" -O $HOST/scripts/"+script_name.lstrip("scripts_")+" "+_REPO_COMMON+script_name)
+        showexec ("scripts: chmod", "chmod +x $HOST/scripts/*.sh")
 
     # Parse and exec post-actions
     for action_name, action_cmd in config.items("postactions"):
