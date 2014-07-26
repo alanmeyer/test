@@ -2,6 +2,9 @@
 deluser test_user_1
 deluser test_user_2
 deluser test_user_3
+delgroup test_user_1
+delgroup test_user_2
+delgroup test_user_3
 delgroup test_group_1
 delgroup test_group_2
 delgroup test_group_3
