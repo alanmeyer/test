@@ -353,10 +353,10 @@ def main(argv):
 
     # Media files
     if (config.has_section("media")):
-        mkdir -p /media/images
+        showexec ("Create the images folder", "mkdir -p /media/images")
         for media_index, media_name in config.items("media"):
             showexec ("Add media "+media_index, _WGET+" -O /media/images/"+media_name.lstrip("media_")+" "+_REPO_COMMON+media_name)
-        chmod -R +644 /media/images
+        showexec ("Update image folder privlidges", "chmod -R +644 /media/images")
 
     # Config changes
     if (config.has_section("config")):
