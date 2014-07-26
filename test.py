@@ -60,8 +60,8 @@ _APT_UPDATE     = _APT_GET_OPTS + "   update"
 _APT_UPGRADE    = _APT_GET_OPTS + "   upgrade"
 _APT_ADD        = "add-apt-repository -y"
 _APT_KEY        = "apt-key adv --keyserver keyserver.ubuntu.com --recv-keys"
-_USER_ADD       = "adduser --disabled-password --gecos \"\""
-_USER_ADD_SUDO  = "adduser --disabled-password --gecos \"\" --group sudo"
+_USER_ADD       = "adduser --disabled-password --gecos ,,,
+_USER_ADD_SUDO  = "adduser --disabled-password --gecos ,,, --group sudo"
 _WGET           = "wget"
 
 # Classes
