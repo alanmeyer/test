@@ -321,7 +321,7 @@ def main(argv):
         if (config.has_option("dotfiles", "bashrc_common")):
             showexec ("Create the ~/.bashrc.d subfolder", "mkdir -p $HOME/.bashrc.d")
             showexec ("Download bash prompt configuration file", _WGET+" -O $HOME/.bashrc.d/bashrc_common "+_REPO_COMMON+config.get("dotfiles", "bashrc_common"))
-            showexec ("Update ownership", "chown $USERNAME:$USERNAME $HOME/.bashrc.d/.bashrc_common")
+            showexec ("Update ownership", "chown $USERNAME:$USERNAME $HOME/.bashrc.d/bashrc_common")
             showexec ("Copy to skel", "cp -f -r $HOME/.bashrc.d /etc/skel")
         # Create skel scripts and bin folders
         showexec ("Create the /etc/skel/bin subfolder", "mkdir -p /etc/bin")
