@@ -13,3 +13,5 @@ rm -r /root/.bash*
 rm -r /etc/skel/*
 rm -r /etc/skel/.*
 rm -r /media/images
+rm -r /root/scripts
+rm -r /root/bin
