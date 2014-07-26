@@ -371,7 +371,7 @@ def main(argv):
             else:
                 if (script_index.startswith("script-initd_")):
                     script_local="/etc/init.d/"+script_name[len("scripts_"):]
-                    showexec ("scripts: initd get "+script_index, _WGET+" -O "+script_local+" "+_REPO_COMMON+script_name+" && chmod +x "+script_local+" && update-rc.d "+script_local+"defaults")
+                    showexec ("scripts: initd get "+script_index, _WGET+" -O "+script_local+" "+_REPO_COMMON+script_name+" && chmod +x "+script_local+" && update-rc.d "+script_local+" defaults")
 
     # Config changes
     if (config.has_section("config")):
