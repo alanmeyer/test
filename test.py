@@ -60,8 +60,9 @@ _APT_UPDATE     = _APT_GET_OPTS + "   update"
 _APT_UPGRADE    = _APT_GET_OPTS + "   upgrade"
 _APT_ADD        = "add-apt-repository -y"
 _APT_KEY        = "apt-key adv --keyserver keyserver.ubuntu.com --recv-keys"
-_USER_ADD       = "adduser --disabled-password --gecos ,,,
-_USER_ADD_SUDO  = "adduser --disabled-password --gecos ,,, --group sudo"
+_USER_ADD       = "adduser --disabled-password --gecos ,,,"
+_GROUP_ADD      = "addgroup"
+_USER_MOD_GROUP = "usermod -a -G"
 _WGET           = "wget"
 
 # Classes
@@ -337,6 +338,16 @@ def main(argv):
     if (config.has_section("users")):
         for user_op, user_name in config.items("users"):
             showexec ("Users "+user_op, _USER_ADD+" "+user_name)
+
+    # Add an existing user to a group
+    if (config.has_section("groups")):
+        for group_op, group_name in config.items("groups"):
+            showexec ("Groups "+user_op, _GROUP_ADD+" "+group_name)
+
+    # Add an existing user to an existing group
+    if (config.has_section("groups users")):
+        for group_name, user_name in config.items("groups users"):
+            showexec ("Add User: "+user_name+" to Group: "+group_name, _USER_MOD_GROUP" "+group_name+" "+user_name)
 
     # Config changes
     if (config.has_section("config")):
