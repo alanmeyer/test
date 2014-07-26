@@ -43,6 +43,8 @@ _GIT_PREFIX     = "https://raw.github.com/"
 _SLASH          = "/"
 _GIT_SUFFIX     = _GIT_USER + _SLASH + _GIT_PROJECT + _SLASH + _GIT_BRANCH + _SLASH + _GIT_FILE + ".cfg"
 _LOG_FILE       = _GIT_FILE + ".log"
+_DPKG_LOG_BEF   = _GIT_FILE + "-before.log"
+_DPKG_LOG_AFT   = _GIT_FILE + "-after.log"
 _CONF_FILE      = _GIT_PREFIX + _GIT_SUFFIX
 _REPO_COMMON    = _GIT_PREFIX + _GIT_COM_USER + _SLASH + _GIT_COM_PROJ + _SLASH + _GIT_COM_BRANCH + _SLASH
 
@@ -306,11 +308,13 @@ def main(argv):
     #showexec ("System upgrade (~20 mins, please be patient...)", _APT_UPGRADE)
 
     # Parse and install packages
+    showexec ("Log before packages ", "dpkg -l > _DPKG_LOG_BEF")
     for pkg_type, pkg_list in config.items("packages"):
         if (pkg_type.startswith("remove_")):
             showexec ("Remove packages "+pkg_type.lstrip("remove_"), _APT_REMOVE+" "+pkg_list)
         else:
             showexec ("Install packages "+pkg_type, _APT_INSTALL+" "+pkg_list)
+    showexec ("Log after packages ", "dpkg -l > _DPKG_LOG_AFT")
     
     # Download and install dotfiles: vimrc, prompt...
     if (config.has_section("dotfiles")):
@@ -331,16 +335,19 @@ def main(argv):
         if (config.has_option("dotfiles", "vimrc")):
             showexec ("Donwload the Vim configuration file", _WGET+" -O $HOME/.vimrc "+_REPO_COMMON+config.get("dotfiles", "vimrc"))
             showexec ("Install the Vim configuration file", "chown -R $USERNAME:$USERNAME $HOME/.vimrc")
+            showexec ("Copy to skel", "cp -f $HOME/.vimrc /etc/skel")
 
         # Htop
         if (config.has_option("dotfiles", "htoprc")):
             showexec ("Download the Htop configuration file", _WGET+" -O $HOME/.htoprc "+_REPO_COMMON+config.get("dotfiles", "htoprc"))
             showexec ("Install the Htop configuration file", "chown -R $USERNAME:$USERNAME $HOME/.htoprc")
+            showexec ("Copy to skel", "cp -f $HOME/.htoprc /etc/skel")
 
         # Pythonrc
         if (config.has_option("dotfiles", "pythonrc")):
             showexec ("Download the Pythonrc configuration file", _WGET+" -O $HOME/.pythonrc "+_REPO_COMMON+config.get("dotfiles", "pythonrc"))
             showexec ("Install the Pythonrc configuration file", "chown -R $USERNAME:$USERNAME $HOME/.pythonrc")
+            showexec ("Copy to skel", "cp -f $HOME/.pythonrc /etc/skel")
 
     # Config changes
     if (config.has_section("config")):
