@@ -337,12 +337,12 @@ def main(argv):
     # Add new users
     if (config.has_section("users")):
         for user_op, user_name in config.items("users"):
-            showexec ("Users "+user_op, _USER_ADD+" "+user_name)
+            showexec ("Add User "+user_name, _USER_ADD+" "+user_name)
 
     # Add an existing user to a group
     if (config.has_section("groups")):
         for group_op, group_name in config.items("groups"):
-            showexec ("Groups "+user_op, _GROUP_ADD+" "+group_name)
+            showexec ("Add Group "+group_name, _GROUP_ADD+" "+group_name)
 
     # Add an existing user to an existing group
     if (config.has_section("groups users")):
