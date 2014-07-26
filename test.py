@@ -20,54 +20,54 @@ import ConfigParser
 
 # Global variables
 #-----------------------------------------------------------------------------
-_VERSION        = "0.10.AM"
-_DEBUG          = 1
+_VERSION            = "0.10.AM"
+_DEBUG              = 1
 
 # Change these values based on your project location
-_GIT_USER       = "alanmeyer"
-_GIT_PROJECT    = "test"
-_GIT_BRANCH     = "master"
-_GIT_FILE       = "test"
+_GIT_USER           = "alanmeyer"
+_GIT_PROJECT        = "test"
+_GIT_BRANCH         = "master"
+_GIT_FILE           = "test"
 
 # Change these based on your server
-_OS_VERSION     = "trusty"
-_IP             = '192.3.22.147'
+_OS_VERSION         = "trusty"
+_IP                 = "192.3.22.147"
 
 # Change these only if you want a different set of common configuration files
-_GIT_COM_USER   = "alanmeyer"
-_GIT_COM_PROJ   = "postinstall-common"
-_GIT_COM_BRANCH = "master"
+_GIT_COMMON_USER    = "alanmeyer"
+_GIT_COMMON_PROJECT = "postinstall-common"
+_GIT_COMMON_BRANCH  = "master"
 
 # Generated based on user config
-_GIT_PREFIX     = "https://raw.github.com/"
-_SLASH          = "/"
-_GIT_SUFFIX     = _GIT_USER + _SLASH + _GIT_PROJECT + _SLASH + _GIT_BRANCH + _SLASH + _GIT_FILE + ".cfg"
-_LOG_FILE       = _GIT_FILE + ".log"
-_DPKG_LOG_BEF   = _GIT_FILE + "-packages-before.log"
-_DPKG_LOG_AFT   = _GIT_FILE + "-packages-after.log"
-_CONF_FILE      = _GIT_PREFIX + _GIT_SUFFIX
-_REPO_COMMON    = _GIT_PREFIX + _GIT_COM_USER + _SLASH + _GIT_COM_PROJ + _SLASH + _GIT_COM_BRANCH + _SLASH
+_GIT_PREFIX         = "https://raw.github.com/"
+_SLASH              = "/"
+_GIT_SUFFIX         = _GIT_USER + _SLASH + _GIT_PROJECT + _SLASH + _GIT_BRANCH + _SLASH + _GIT_FILE + ".cfg"
+_LOG_FILE           = _GIT_FILE + ".log"
+_DPKG_LOG_BEFORE    = _GIT_FILE + "-packages-before.log"
+_DPKG_LOG_AFTER     = _GIT_FILE + "-packages-after.log"
+_CONF_FILE          = _GIT_PREFIX + _GIT_SUFFIX
+_REPO_COMMON        = _GIT_PREFIX + _GIT_COMMON_USER + _SLASH + _GIT_COMMON_PROJECT + _SLASH + _GIT_COMMON_BRANCH + _SLASH
 
 # System commands
 #-----------------------------------------------------------------------------
 
-_NO_FRONTEND    = "DEBIAN_FRONTEND=noninteractive "
-_APT_GET        = "apt-get "
-_FORCE_YES      = "-y --force-yes --allow-unauthenticated "
-_PKG_OPTIONS    = "-o Dpkg::Options::=\"--force-confdef\" -o Dpkg::Options::=\"--force-confold\" "
-_APT_GET_OPTS   = _NO_FRONTEND + _APT_GET + _FORCE_YES + _PKG_OPTIONS
-_APT_REMOVE     = _APT_GET_OPTS + "-f remove"
-_APT_INSTALL    = _APT_GET_OPTS + "-f install"
-_APT_UPDATE     = _APT_GET_OPTS + "   update"
-_APT_UPGRADE    = _APT_GET_OPTS + "   upgrade"
-_APT_ADD        = "add-apt-repository -y"
-_APT_KEY        = "apt-key adv --keyserver keyserver.ubuntu.com --recv-keys"
-_USER_ADD       = "adduser --disabled-password --gecos ,,,"
-_GROUP_ADD      = "addgroup"
-_USER_MOD_GROUP = "usermod -a -G"
-_USER_DEL       = "deluser"
-_GROUP_DEL      = "delgroup"
-_WGET           = "wget"
+_NO_FRONTEND        = "DEBIAN_FRONTEND=noninteractive "
+_APT_GET            = "apt-get "
+_FORCE_YES          = "-y --force-yes --allow-unauthenticated "
+_PKG_OPTIONS        = "-o Dpkg::Options::=\"--force-confdef\" -o Dpkg::Options::=\"--force-confold\" "
+_APT_GET_OPTS       = _NO_FRONTEND + _APT_GET + _FORCE_YES + _PKG_OPTIONS
+_APT_REMOVE         = _APT_GET_OPTS + "-f remove"
+_APT_INSTALL        = _APT_GET_OPTS + "-f install"
+_APT_UPDATE         = _APT_GET_OPTS + "   update"
+_APT_UPGRADE        = _APT_GET_OPTS + "   upgrade"
+_APT_ADD            = "add-apt-repository -y"
+_APT_KEY            = "apt-key adv --keyserver keyserver.ubuntu.com --recv-keys"
+_USER_ADD           = "adduser --disabled-password --gecos ,,,"
+_GROUP_ADD          = "addgroup"
+_USER_MOD_GROUP     = "usermod -a -G"
+_USER_DEL           = "deluser"
+_GROUP_DEL          = "delgroup"
+_WGET               = "wget"
 
 
 # Classes
@@ -308,13 +308,13 @@ def main(argv):
     showexec ("System upgrade (~20 mins, please be patient...)", _APT_UPGRADE)
 
     # Parse and install packages
-    showexec ("Log before packages ", "dpkg -l > " + _DPKG_LOG_BEF)
+    showexec ("Log before packages ", "dpkg -l > " + _DPKG_LOG_BEFORE)
     for pkg_type, pkg_list in config.items("packages"):
         if (pkg_type.startswith("remove_")):
             showexec ("Remove packages "+pkg_type.lstrip("remove_"), _APT_REMOVE+" "+pkg_list)
         else:
             showexec ("Install packages "+pkg_type, _APT_INSTALL+" "+pkg_list)
-    showexec ("Log after packages ", "dpkg -l > " + _DPKG_LOG_AFT)
+    showexec ("Log after packages ", "dpkg -l > " + _DPKG_LOG_AFTER)
     
     # Download and install dotfiles: vimrc, prompt...
     if (config.has_section("dotfiles")):
@@ -351,10 +351,17 @@ def main(argv):
             showexec ("Install the Pythonrc configuration file", "chown -R $USERNAME:$USERNAME $HOME/.pythonrc")
             showexec ("Copy to skel", "cp -f $HOME/.pythonrc /etc/skel")
 
+    # Media files
+    if (config.has_section("media")):
+        mkdir -p /media/images
+        for media_index, media_name in config.items("media"):
+            showexec ("Add media "+media_index, _WGET+" -O /media/images/"+media_name.lstrip("media_")+" "+_REPO_COMMON+media_name)
+        chmod -R +644 /media/images
+
     # Config changes
     if (config.has_section("config")):
         for action_name, action_cmd in config.items("config"):
-            showexec ("Execute config action "+action_name.lstrip("action_"), action_cmd)
+            showexec ("Configure "+action_name.lstrip("config_"), action_cmd)
 
     # Add new users
     if (config.has_section("users")):
