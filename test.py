@@ -308,13 +308,13 @@ def main(argv):
     #showexec ("System upgrade (~20 mins, please be patient...)", _APT_UPGRADE)
 
     # Parse and install packages
-    showexec ("Log before packages ", "dpkg -l > _DPKG_LOG_BEF")
+    showexec ("Log before packages ", "dpkg -l > " + _DPKG_LOG_BEF)
     for pkg_type, pkg_list in config.items("packages"):
         if (pkg_type.startswith("remove_")):
             showexec ("Remove packages "+pkg_type.lstrip("remove_"), _APT_REMOVE+" "+pkg_list)
         else:
             showexec ("Install packages "+pkg_type, _APT_INSTALL+" "+pkg_list)
-    showexec ("Log after packages ", "dpkg -l > _DPKG_LOG_AFT")
+    showexec ("Log after packages ", "dpkg -l > " + _DPKG_LOG_AFT)
     
     # Download and install dotfiles: vimrc, prompt...
     if (config.has_section("dotfiles")):
