@@ -32,6 +32,8 @@ _GIT_FILE           = "test"
 # Change these based on your server
 _OS_VERSION         = "trusty"
 _IP                 = "192.3.22.147"
+_HOSTNAME           = "vserver"
+_DOMAIN             = "ocmeyer.com"
 
 # Change these only if you want a different set of common configuration files
 _GIT_COMMON_USER    = "alanmeyer"
@@ -39,6 +41,7 @@ _GIT_COMMON_PROJECT = "postinstall-common"
 _GIT_COMMON_BRANCH  = "master"
 
 # Generated based on user config
+_FQDN               = _HOSTNAME+"."+_DOMAIN
 _GIT_PREFIX         = "https://raw.github.com/"
 _SLASH              = "/"
 _GIT_SUFFIX         = _GIT_USER + _SLASH + _GIT_PROJECT + _SLASH + _GIT_BRANCH + _SLASH + _GIT_FILE + ".cfg"
@@ -296,6 +299,18 @@ def main(argv):
         showexec ("Download the configuration file", "rm -f "+config_file+" ; "+_WGET+" -O "+config_file+" "+config_url)
     config = ConfigParser.RawConfigParser()
     config.read(config_file)
+
+    # Set the hostname & IP
+    showexec ("hosts: save original hosts file","cp -n /etc/hosts /etc/hosts.orig")
+    showexec ("hosts: ip update", "sed -i 's,^\("+_IP+"\).*/,\1 "+_FQDN+" "+_HOSTNAME+" localhost localhost.localdomain > /etc/hosts")
+    showexec ("hosts: update hostname","echo \""+_FQDN+" | tee /etc/hostname")
+    showexec ("hosts: hostname service restart","service hostname restart")
+
+    #action_webalizer_2      = sed -i 's,^\(LogFile\).*,\1 /var/log/apache2/access.log,g'    /etc/webalizer/webalizer.conf
+    #action_host1            = cp -n /etc/hosts /etc/hosts.orig
+    #action_host2            = sed -i 's/^107.150.5.22 .*/107.150.5.22 mail.ocmeyer.com mail/g' /etc/hosts
+    #action_host3            = echo "mail.ocmeyer.com" | tee /etc/hostname
+    #action_host4            = service hostname restart
 
     # Parse and exec pre-actions
     for action_name, action_cmd in config.items("preactions"):
