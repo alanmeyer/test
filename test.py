@@ -299,7 +299,8 @@ def main(argv):
 
     # Parse and exec pre-actions
     for action_name, action_cmd in config.items("preactions"):
-        showexec ("Execute preaction "+action_name.lstrip("action_"), action_cmd)
+        name=action_name[len("action_"):]
+        showexec ("preaction: "+name, action_cmd)
         
     # Update repos
     showexec ("Update repositories", _APT_UPDATE)
@@ -311,9 +312,10 @@ def main(argv):
     showexec ("Log before packages ", "dpkg -l > " + _DPKG_LOG_BEFORE)
     for pkg_type, pkg_list in config.items("packages"):
         if (pkg_type.startswith("remove_")):
-            showexec ("Remove packages "+pkg_type.lstrip("remove_"), _APT_REMOVE+" "+pkg_list)
+            packages=pkg_type[len("remove_"):]
+            showexec ("packages: Remove "+packages, _APT_REMOVE+" "+pkg_list)
         else:
-            showexec ("Install packages "+pkg_type, _APT_INSTALL+" "+pkg_list)
+            showexec ("packages: Install "+pkg_type, _APT_INSTALL+" "+pkg_list)
     showexec ("Log after packages ", "dpkg -l > " + _DPKG_LOG_AFTER)
     
     # Download and install dotfiles: vimrc, prompt...
@@ -355,13 +357,15 @@ def main(argv):
     if (config.has_section("media")):
         showexec ("media: Create images directory", "mkdir -p /media/images")
         for media_index, media_name in config.items("media"):
-            showexec ("media: Add "+media_index, _WGET+" -O /media/images/"+media_name.lstrip("media_")+" "+_REPO_COMMON+media_name)
+            name=media_name[len("media_"):]
+            showexec ("media: Add "+media_index, _WGET+" -O /media/images/"+name+" "+_REPO_COMMON+media_name)
         showexec ("media: Update image directory privlidges", "chmod -R +644 /media/images")
 
     # Config changes
     if (config.has_section("config")):
         for action_name, action_cmd in config.items("config"):
-            showexec ("config: "+action_name.lstrip("config_"), action_cmd)
+            name=action_name[len("config_"):]
+            showexec ("config: "+name, action_cmd)
 
     # Add new users
     if (config.has_section("users")):
@@ -397,7 +401,8 @@ def main(argv):
 
     # Parse and exec post-actions
     for action_name, action_cmd in config.items("postactions"):
-        showexec ("Execute postaction "+action_name.lstrip("action_"), action_cmd)
+        name=action_name[len("action_"):]
+        showexec ("postaction: "+name, action_cmd)
 
     # End of the script
     print("---")
