@@ -302,7 +302,8 @@ def main(argv):
 
     # Set the hostname & IP
     showexec ("hosts: save original hosts file","cp -n /etc/hosts /etc/hosts.orig")
-    showexec ("hosts: ip update", "sed -i 's,^\("+_IP+"\).*/,\\1 "+_FQDN+" "+_HOSTNAME+" localhost localhost.localdomain,g' /etc/hosts")
+    #showexec ("hosts: ip update", "sed -i 's,^\("+_IP+"\).*/,\\1 "+_FQDN+" "+_HOSTNAME+" localhost localhost.localdomain,g' /etc/hosts")
+    showexec ("hosts: ip update", "sed -i 's/^"+_IP+" .*/"+_IP+" "+_FQDN+" "+HOSTNAME+" localhost.localdomain localhost/g' /etc/hosts")
     showexec ("hosts: update hostname","echo \""+_FQDN+"\" | tee /etc/hostname")
     showexec ("hosts: hostname service restart","service hostname restart")
 
@@ -318,20 +319,20 @@ def main(argv):
         showexec ("preaction: "+name, action_cmd)
         
     # Update repos
-    showexec ("Update repositories", _APT_UPDATE)
+    showexec ("update repositories", _APT_UPDATE)
     
     # Upgrade system
-    showexec ("System upgrade (~20 mins, please be patient...)", _APT_UPGRADE)
+    showexec ("system upgrade (~20 mins, please be patient...)", _APT_UPGRADE)
 
     # Parse and install packages
-    showexec ("Log before packages ", "dpkg -l > " + _DPKG_LOG_BEFORE)
+    showexec ("pacakages: log before ", "dpkg -l > " + _DPKG_LOG_BEFORE)
     for pkg_type, pkg_list in config.items("packages"):
         if (pkg_type.startswith("remove_")):
             packages=pkg_type[len("remove_"):]
             showexec ("packages: Remove "+packages, _APT_REMOVE+" "+pkg_list)
         else:
             showexec ("packages: Install "+pkg_type, _APT_INSTALL+" "+pkg_list)
-    showexec ("Log after packages ", "dpkg -l > " + _DPKG_LOG_AFTER)
+    showexec ("packages: log after ", "dpkg -l > " + _DPKG_LOG_AFTER)
     
     # Download and install dotfiles: vimrc, prompt...
     if (config.has_section("dotfiles")):
