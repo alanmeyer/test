@@ -302,10 +302,10 @@ def main(argv):
         showexec ("Execute preaction "+action_name.lstrip("action_"), action_cmd)
         
     # Update repos
-    #showexec ("Update repositories", _APT_UPDATE)
+    showexec ("Update repositories", _APT_UPDATE)
     
     # Upgrade system
-    #showexec ("System upgrade (~20 mins, please be patient...)", _APT_UPGRADE)
+    showexec ("System upgrade (~20 mins, please be patient...)", _APT_UPGRADE)
 
     # Parse and install packages
     showexec ("Log before packages ", "dpkg -l > " + _DPKG_LOG_BEF)
@@ -327,9 +327,11 @@ def main(argv):
             showexec ("Download bash prompt configuration file", _WGET+" -O $HOME/.bashrc.d/bashrc_common "+_REPO_COMMON+config.get("dotfiles", "bashrc_common"))
             showexec ("Update ownership", "chown $USERNAME:$USERNAME $HOME/.bashrc.d/bashrc_common")
             showexec ("Copy to skel", "cp -f -r $HOME/.bashrc.d /etc/skel")
-        # Create skel scripts and bin folders
-        showexec ("Create the /etc/skel/bin subfolder", "mkdir -p /etc/bin")
-        showexec ("Create the /etc/skel/scripts subfolder", "mkdir -p /etc/scripts")
+        # Create scripts and bin folders
+        showexec ("Create the $HOME/bin subfolder", "mkdir -p $HOME/bin")
+        showexec ("Create the $HOME/scripts subfolder", "mkdir -p $HOME/scripts")
+        showexec ("Create the /etc/skel/bin subfolder", "mkdir -p /etc/skel/bin")
+        showexec ("Create the /etc/skel/scripts subfolder", "mkdir -p /etc/skel/scripts")
 
         # Vim
         if (config.has_option("dotfiles", "vimrc")):
