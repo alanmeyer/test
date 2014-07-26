@@ -347,7 +347,7 @@ def main(argv):
     # Add an existing user to an existing group
     if (config.has_section("groups users")):
         for group_name, user_name in config.items("groups users"):
-            showexec ("Add User: "+user_name+" to Group: "+group_name, _USER_MOD_GROUP" "+group_name+" "+user_name)
+            showexec ("Add User: "+user_name+" to Group: "+group_name, _USER_MOD_GROUP+" "+group_name+" "+user_name)
 
     # Config changes
     if (config.has_section("config")):
