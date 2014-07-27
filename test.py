@@ -28,12 +28,6 @@ _GIT_PROJECT        = "test"
 _GIT_BRANCH         = "master"
 _GIT_FILE           = "test"
 
-# Change these based on your server
-#_OS_VERSION         = "trusty"
-#_IP                 = "192.3.22.147"
-#_HOSTNAME           = "vserver"
-#_DOMAIN             = "ocmeyer.com"
-
 # Change these only if you want a different set of common configuration files
 _GIT_COMMON_USER    = "alanmeyer"
 _GIT_COMMON_PROJECT = "postinstall-common"
@@ -290,16 +284,6 @@ def main(argv):
             version()
             exit()
 
-    # Are your root ?
-    if (not isroot()):
-        showexec ("Script should be run as root", "whoami", exitonerror = 1)
-        
-    # Is it Trusty?
-    _UBUNTU_VERSION = platform.linux_distribution()[2]
-    if (_UBUNTU_VERSION != _OS_VERSION):
-        showexec (_UBUNTU_VERSION)
-        showexec ("Script only for " + _OS_VERSION, "lsb_release -a", exitonerror = 1)
-    
     # Read the configuration file
     if (config_file == ""):
         config_file = _GIT_FILE + ".cfg"
@@ -307,30 +291,48 @@ def main(argv):
     config = ConfigParser.RawConfigParser()
     config.read(config_file)
 
-
     # Get our server variables
+    # First set the default values
+    my_os_version   = _OS_VERSION
+    my_ip           = _IP
+    my_hostname     = _HOSTNAME
+    my_domain       = _DOMAIN
+
+    # Update with the config file if present
     if (config.has_section("server")):
         if (config.has_option("server", "os_version")):
-            _OS_VERSION = config.get("server", "os_version")
+            my_os_version = config.get("server", "os_version")
         if (config.has_option("server", "ip")):
-            _IP = config.get("server", "ip")
+            my_ip = config.get("server", "ip")
         if (config.has_option("server", "hostname")):
-            _HOSTNAME = config.get("server", "hostname")
+            my_hostname = config.get("server", "hostname")
         if (config.has_option("server", "domain")):
-            _DOMAIN = config.get("server", "domain")
-    _FQDN = _HOSTNAME+"."+_DOMAIN
+            my_domain = config.get("server", "domain")
+    my_fqdn = my_hostname+" "+my_domain
+
+    showexec("server info: os_version = " + my_os_version)
+    showexec("server info: ip         = " + my_ip)
+    showexec("server info: hostname   = " + my_hostname)
+    showexec("server info: domain     = " + my_domain)
+    showexec("server info: fqdn       = " + my_fqdn)
+
+
+    # Are your root ?
+    if (not isroot()):
+        showexec ("Script should be run as root", "whoami", exitonerror = 1)
+        
+    # Is it the right OS version ?
+    _UBUNTU_VERSION = platform.linux_distribution()[2]
+    if (_UBUNTU_VERSION != my_os_version):
+        showexec (_UBUNTU_VERSION)
+        showexec ("Script only for " + my_os_version, "lsb_release -a", exitonerror = 1)
+    
 
     # Set the hostname & IP
     showexec ("hosts: save original hosts file","cp -n /etc/hosts /etc/hosts.orig")
-    showexec ("hosts: ip update", "sed -i 's/^"+_IP+" .*/"+_IP+" "+_FQDN+" "+_HOSTNAME+" localhost.localdomain localhost/g' /etc/hosts")
-    showexec ("hosts: update hostname","echo \""+_FQDN+"\" | tee /etc/hostname")
+    showexec ("hosts: ip update", "sed -i 's/^"+my_ip+" .*/"+my_ip+" "+my_fqdn+" "+my_hostname+" localhost.localdomain localhost/g' /etc/hosts")
+    showexec ("hosts: update hostname","echo \""+my_fqdn+"\" | tee /etc/hostname")
     showexec ("hosts: hostname service restart","service hostname restart")
-
-    #action_webalizer_2      = sed -i 's,^\(LogFile\).*,\1 /var/log/apache2/access.log,g'    /etc/webalizer/webalizer.conf
-    #action_host1            = cp -n /etc/hosts /etc/hosts.orig
-    #action_host2            = sed -i 's/^107.150.5.22 .*/107.150.5.22 mail.ocmeyer.com mail/g' /etc/hosts
-    #action_host3            = echo "mail.ocmeyer.com" | tee /etc/hostname
-    #action_host4            = service hostname restart
 
     # Parse and exec pre-actions
     for action_name, action_cmd in config.items("preactions"):
