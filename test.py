@@ -44,12 +44,11 @@ _CONF_FILE          = _GIT_PREFIX + _GIT_SUFFIX
 _REPO_COMMON        = _GIT_PREFIX + _GIT_COMMON_USER + _SLASH + _GIT_COMMON_PROJECT + _SLASH + _GIT_COMMON_BRANCH + _SLASH
 
 # The following should be set in the configuration file
-# Only the default values are here in case the config file is missing them
-_OS_VERSION         = "trusty"
-_IP                 = "10.10.10.10"
-_HOSTNAME           = "server"
-_DOMAIN             = "example.com"
-_FQDN               = _HOSTNAME+"."+_DOMAIN
+# These are just placeholder values or for missing info in the config file
+_DEFAULT_OS_VERSION = "trusty"
+_DEFAULT_IP         = "10.10.10.10"
+_DEFAULT_HOSTNAME   = "server"
+_DEFAULT_DOMAIN     = "example.com"
 
 
 # System commands
@@ -293,10 +292,10 @@ def main(argv):
 
     # Get our server variables
     # First set the default values
-    my_os_version   = _OS_VERSION
-    my_ip           = _IP
-    my_hostname     = _HOSTNAME
-    my_domain       = _DOMAIN
+    my_os_version   = _DEFAULT_OS_VERSION
+    my_ip           = _DEFAULT_IP
+    my_hostname     = _DEFAULT_HOSTNAME
+    my_domain       = _DEFAULT_DOMAIN
 
     # Update with the config file if present
     if (config.has_section("server")):
