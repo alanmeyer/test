@@ -310,11 +310,11 @@ def main(argv):
             my_domain = config.get("server", "domain")
     my_fqdn = my_hostname+" "+my_domain
 
-    showexec("server info: os_version = " + my_os_version)
-    showexec("server info: ip         = " + my_ip)
-    showexec("server info: hostname   = " + my_hostname)
-    showexec("server info: domain     = " + my_domain)
-    showexec("server info: fqdn       = " + my_fqdn)
+    showexec("server info: os_version = " + my_os_version, "true")
+    showexec("server info: ip         = " + my_ip        , "true")
+    showexec("server info: hostname   = " + my_hostname  , "true")
+    showexec("server info: domain     = " + my_domain    , "true")
+    showexec("server info: fqdn       = " + my_fqdn      , "true")
 
 
     # Are your root ?
