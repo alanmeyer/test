@@ -2,12 +2,11 @@
 # Alan Meyer
 # https://github.com/alanmeyer/test
 #
+# Post linux installation script
+#
 # Based on work from http://www.nicolargo.com
 # Distributed under the GPL version 3 license
 
-"""
-Post linux installation script
-"""
 
 import os
 import sys
@@ -30,10 +29,10 @@ _GIT_BRANCH         = "master"
 _GIT_FILE           = "test"
 
 # Change these based on your server
-_OS_VERSION         = "trusty"
-_IP                 = "192.3.22.147"
-_HOSTNAME           = "vserver"
-_DOMAIN             = "ocmeyer.com"
+#_OS_VERSION         = "trusty"
+#_IP                 = "192.3.22.147"
+#_HOSTNAME           = "vserver"
+#_DOMAIN             = "ocmeyer.com"
 
 # Change these only if you want a different set of common configuration files
 _GIT_COMMON_USER    = "alanmeyer"
@@ -41,7 +40,6 @@ _GIT_COMMON_PROJECT = "postinstall-common"
 _GIT_COMMON_BRANCH  = "master"
 
 # Generated based on user config
-_FQDN               = _HOSTNAME+"."+_DOMAIN
 _GIT_PREFIX         = "https://raw.github.com/"
 _SLASH              = "/"
 _GIT_SUFFIX         = _GIT_USER + _SLASH + _GIT_PROJECT + _SLASH + _GIT_BRANCH + _SLASH + _GIT_FILE + ".cfg"
@@ -50,6 +48,15 @@ _DPKG_LOG_BEFORE    = _GIT_FILE + "-packages-before.log"
 _DPKG_LOG_AFTER     = _GIT_FILE + "-packages-after.log"
 _CONF_FILE          = _GIT_PREFIX + _GIT_SUFFIX
 _REPO_COMMON        = _GIT_PREFIX + _GIT_COMMON_USER + _SLASH + _GIT_COMMON_PROJECT + _SLASH + _GIT_COMMON_BRANCH + _SLASH
+
+# The following should be set in the configuration file
+# Only the default values are here in case the config file is missing them
+_OS_VERSION         = "trusty"
+_IP                 = "10.10.10.10"
+_HOSTNAME           = "server"
+_DOMAIN             = "example.com"
+_FQDN               = _HOSTNAME+"."+_DOMAIN
+
 
 # System commands
 #-----------------------------------------------------------------------------
@@ -300,9 +307,21 @@ def main(argv):
     config = ConfigParser.RawConfigParser()
     config.read(config_file)
 
+
+    # Get our server variables
+    if (config.has_section("server")):
+        if (config.has_option("server", "os_version")):
+            _OS_VERSION = config.get("server", "os_version")
+        if (config.has_option("server", "ip")):
+            _IP = config.get("server", "ip")
+        if (config.has_option("server", "hostname")):
+            _HOSTNAME = config.get("server", "hostname")
+        if (config.has_option("server", "domain")):
+            _DOMAIN = config.get("server", "domain")
+    _FQDN = _HOSTNAME+"."+_DOMAIN
+
     # Set the hostname & IP
     showexec ("hosts: save original hosts file","cp -n /etc/hosts /etc/hosts.orig")
-    #showexec ("hosts: ip update", "sed -i 's,^\("+_IP+"\).*/,\\1 "+_FQDN+" "+_HOSTNAME+" localhost localhost.localdomain,g' /etc/hosts")
     showexec ("hosts: ip update", "sed -i 's/^"+_IP+" .*/"+_IP+" "+_FQDN+" "+_HOSTNAME+" localhost.localdomain localhost/g' /etc/hosts")
     showexec ("hosts: update hostname","echo \""+_FQDN+"\" | tee /etc/hostname")
     showexec ("hosts: hostname service restart","service hostname restart")
