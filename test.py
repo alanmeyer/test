@@ -308,13 +308,13 @@ def main(argv):
             my_hostname = config.get("server", "hostname")
         if (config.has_option("server", "domain")):
             my_domain = config.get("server", "domain")
-    my_fqdn = my_hostname+" "+my_domain
+    my_fqdn = my_hostname+"."+my_domain
 
-    showexec("server info: os_version = " + my_os_version, "true")
-    showexec("server info: ip         = " + my_ip        , "true")
-    showexec("server info: hostname   = " + my_hostname  , "true")
-    showexec("server info: domain     = " + my_domain    , "true")
-    showexec("server info: fqdn       = " + my_fqdn      , "true")
+    showexec("server: os_version = " + my_os_version, "true")
+    showexec("server: ip         = " + my_ip        , "true")
+    showexec("server: hostname   = " + my_hostname  , "true")
+    showexec("server: domain     = " + my_domain    , "true")
+    showexec("server: fqdn       = " + my_fqdn      , "true")
 
 
     # Are your root ?
