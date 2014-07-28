@@ -24,9 +24,9 @@ _DEBUG              = 1
 
 # Change these values based on your project location
 _GIT_USER           = "alanmeyer"
-_GIT_PROJECT        = "test"
-_GIT_BRANCH         = "master"
-_GIT_FILE           = "test"
+_GIT_PROJECT        = "postinstall"
+_GIT_BRANCH         = "vserver"
+_GIT_FILE           = "postinstall"
 
 # Change these only if you want a different set of common configuration files
 _GIT_COMMON_USER    = "alanmeyer"
@@ -56,13 +56,14 @@ _DEFAULT_DOMAIN     = "example.com"
 
 _NO_FRONTEND        = "DEBIAN_FRONTEND=noninteractive "
 _APT_GET            = "apt-get "
-_FORCE_YES          = "-y --force-yes --allow-unauthenticated "
+_FORCE_YES          = "-y --allow-unauthenticated "
 _PKG_OPTIONS        = "-o Dpkg::Options::=\"--force-confdef\" -o Dpkg::Options::=\"--force-confold\" "
-_APT_GET_OPTS       = _NO_FRONTEND + _APT_GET + _FORCE_YES + _PKG_OPTIONS
-_APT_REMOVE         = _APT_GET_OPTS + "-f remove"
-_APT_INSTALL        = _APT_GET_OPTS + "-f install"
-_APT_UPDATE         = _APT_GET_OPTS + "   update"
-_APT_UPGRADE        = _APT_GET_OPTS + "   upgrade"
+_APT_GET_OPTS       = _NO_FRONTEND + _APT_GET + _FORCE_YES
+_APT_GET_UPG_OPTS   = _NO_FRONTEND + _APT_GET + _FORCE_YES + _PKG_OPTIONS
+_APT_REMOVE         = _APT_GET_OPTS     + "-f remove"
+_APT_INSTALL        = _APT_GET_OPTS     + "-f install"
+_APT_UPDATE         = _APT_GET_OPTS     + "   update"
+_APT_UPGRADE        = _APT_GET_UPG_OPTS + "   upgrade"
 _APT_ADD            = "add-apt-repository -y"
 _APT_KEY            = "apt-key adv --keyserver keyserver.ubuntu.com --recv-keys"
 _USER_ADD           = "adduser --disabled-password --gecos ,,,"
@@ -296,6 +297,7 @@ def main(argv):
     my_ip           = _DEFAULT_IP
     my_hostname     = _DEFAULT_HOSTNAME
     my_domain       = _DEFAULT_DOMAIN
+    my_fqdn         = _DEFAULT_HOSTNAME+"."+_DEFAULT_DOMAIN
 
     # Update with the config file if present
     if (config.has_section("server")):
@@ -307,7 +309,17 @@ def main(argv):
             my_hostname = config.get("server", "hostname")
         if (config.has_option("server", "domain")):
             my_domain = config.get("server", "domain")
-    my_fqdn = my_hostname+"."+my_domain
+        if (config.has_option("server", "fqdn")):
+            my_fqdn = config.get("server", "fqdn")
+
+     # Work-around because we don't have the extended config parser
+     # Copies the values from the server section to the config section
+     # with the prefix "server"
+     # Any config section item can reference using server_%name%
+     if (config.has_section("server")):
+         for server_type, server_value in config.items("server"):
+             name = "server_" + server_type
+             config.set('config', name, server_value)
 
     showexec("server: os_version = " + my_os_version, "true")
     showexec("server: ip         = " + my_ip        , "true")
@@ -339,19 +351,19 @@ def main(argv):
         showexec ("preaction: "+name, action_cmd)
         
     # Update repos
-    #showexec ("update repositories", _APT_UPDATE)
+    showexec ("update repositories", _APT_UPDATE)
     
     # Upgrade system
-    #showexec ("system upgrade (~20 mins, please be patient...)", _APT_UPGRADE)
+    showexec ("system upgrade (~20 mins, please be patient...)", _APT_UPGRADE)
 
     # Parse and install packages
-    showexec ("pacakages: log before ", "dpkg -l > " + _DPKG_LOG_BEFORE)
+    showexec ("packages: log before ", "dpkg -l > " + _DPKG_LOG_BEFORE)
     for pkg_type, pkg_list in config.items("packages"):
         if (pkg_type.startswith("remove_")):
             packages=pkg_type[len("remove_"):]
-            showexec ("packages: Remove "+packages, _APT_REMOVE+" "+pkg_list)
+            showexec ("packages: remove "+packages, _APT_REMOVE+" "+pkg_list)
         else:
-            showexec ("packages: Install "+pkg_type, _APT_INSTALL+" "+pkg_list)
+            showexec ("packages: install "+pkg_type, _APT_INSTALL+" "+pkg_list)
     showexec ("packages: log after ", "dpkg -l > " + _DPKG_LOG_AFTER)
     
     # Download and install dotfiles: vimrc, prompt...
@@ -417,8 +429,9 @@ def main(argv):
     # Config changes
     if (config.has_section("config")):
         for action_name, action_cmd in config.items("config"):
-            name=action_name[len("config_"):]
-            showexec ("config: "+name, action_cmd)
+            if (action_name.startswith("config_")):
+                name=action_name[len("config_"):]
+                showexec ("config: "+name, action_cmd)
 
     # Add new users
     if (config.has_section("users")):
