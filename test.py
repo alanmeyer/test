@@ -339,10 +339,10 @@ def main(argv):
         showexec ("preaction: "+name, action_cmd)
         
     # Update repos
-    showexec ("update repositories", _APT_UPDATE)
+    #showexec ("update repositories", _APT_UPDATE)
     
     # Upgrade system
-    showexec ("system upgrade (~20 mins, please be patient...)", _APT_UPGRADE)
+    #showexec ("system upgrade (~20 mins, please be patient...)", _APT_UPGRADE)
 
     # Parse and install packages
     showexec ("pacakages: log before ", "dpkg -l > " + _DPKG_LOG_BEFORE)
