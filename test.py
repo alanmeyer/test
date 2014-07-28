@@ -24,8 +24,8 @@ _DEBUG              = 1
 
 # Change these values based on your project location
 _GIT_USER           = "alanmeyer"
-_GIT_PROJECT        = "postinstall"
-_GIT_BRANCH         = "vserver"
+_GIT_PROJECT        = "test"
+_GIT_BRANCH         = "master"
 _GIT_FILE           = "postinstall"
 
 # Change these only if you want a different set of common configuration files
