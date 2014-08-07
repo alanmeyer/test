@@ -288,7 +288,7 @@ def main(argv):
     if (config_file == ""):
         config_file = _GIT_FILE + ".cfg"
         showexec ("Download the configuration file", "rm -f "+config_file+" ; "+_WGET+" -O "+config_file+" "+config_url)
-    config = ConfigParser.RawConfigParser()
+    config = ConfigParser.SafeConfigParser()
     config.read(config_file)
 
     # Get our server variables
